@@ -26,10 +26,10 @@ def sentence_count_text(text):
     return len(get_sentences_text(text))
 
 def avg_words_sentence(text):
-    return word_count_text(text)/sentence_count_text(text)
+    return word_count_text(text) / sentence_count_text(text)
 
 def lexical_diversity(text):
-    return unique_words_count_text(text)/word_count_text(text)
+    return unique_words_count_text(text) / word_count_text(text)
 
 def unique_words_p_N(text,N):
     return N*lexical_diversity(text)
@@ -39,6 +39,39 @@ def syllables_count(text):
 
 def complex_words_count(text):
     return sum([1 for x in get_words_text(text) if syllable_count(x)>=3])
+
+def flesch_reading_ease(text):
+    """206.835 - 1.015 * (words / sentences) - 84.6 * (syllables / words)"""
+    return 206.835 - (1.015 * avg_words_sentence(text)) - (84.6 * syllables_count(text) / word_count_text(text))
+
+def flesch_kincaid_grade_level(text):
+    """0.39 * (words / sentences) + 11.8 * (syllables / words) - 15.59"""
+    return (0.39 * avg_words_sentence(text)) + (11.8 * syllables_count(text) / word_count_text(text)) - 15.59
+
+def smog_index(text):
+    """1.043 * ((complex_words * (30 / sentences) + 3.1291)**0.5)"""
+    return 1.043 * ((complex_words_count(text) * (30.0 / sentence_count_text(text)) + 3.1291)**0.5)
+
+def gunning_fog_score(text):
+    """0.4 * ((words / sentences) + 100 * (complex_words / words))"""
+    return 0.4 * (avg_words_sentence(text) + (100 * complex_words_count(text) / word_count_text(text)))
+
+def automated_readability_index(text):
+    """4.71 * (characters / words) + 0.5 * (words / sentences) - 21.43"""
+    words_count = word_count_text(text)
+    return 4.71 * (char_count_text(text) / words_count) + (0.5 * (words_count / sentence_count_text(text))) - 21.43
+
+def coleman_liau_index(text):
+    """(0.0588 * charactersPer100Words) - (0.296 * sentencesPer100Words) - 15.8"""
+    words_count = word_count_text(text)
+    c100 = (char_count_text(text) / words_count) * 100
+    s100 = (sentence_count_text(text) / words_count) * 100
+    return (0.0588 * c100) - (0.296 * s100) - 15.8
+
+# Syllables Count algorithm
+# Based on Tyler Kendall's R Module, which is improved on
+# Greg Fast's Lingua::EN::Syllable Perl Module
+# http://ncslaap.lib.ncsu.edu/tools/scripts/english_syllable_counter-101.R
 
 syl_problem_words = {
     'every': 2,
@@ -104,9 +137,6 @@ syl_prefix_suffix = (
 )
 
 def syllable_count(word):
-    # Based on Tyler Kendall's work
-    # Improved on Greg Fast's Lingua::EN::Syllable Perl Module
-    # http://ncslaap.lib.ncsu.edu/tools/scripts/english_syllable_counter-101.R
     syl_count = 0
     word = word.lower()
     # Remove non-alpha characters
