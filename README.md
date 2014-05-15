@@ -1,4 +1,4 @@
 TextMetrics
 ===========
 
-Python Text Metrics to get statistics from text.
+TextMetrics is a Python library for providing fast statistics, metrics and measures for textual data.
