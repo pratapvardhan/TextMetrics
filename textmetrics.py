@@ -34,6 +34,9 @@ def lexical_diversity(text):
 def unique_words_p_N(text,N):
     return N*lexical_diversity(text)
 
+def long_words_count_N(text,N):
+    return sum([1 for x in get_words_text(text) if len(x)>N])
+
 def syllables_count(text):
     return sum([syllable_count(x) for x in get_words_text(text)])
 
