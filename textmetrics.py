@@ -71,6 +71,11 @@ def coleman_liau_index(text):
     s100 = (sentence_count_text(text) / words_count) * 100
     return (0.0588 * c100) - (0.296 * s100) - 15.8
 
+def lix(text):
+    """(words / sentences)+(longwords*100 / words)"""
+    words_count = word_count_text(text)
+    return (words_count / sentence_count_text(text)) + (long_words_count_N(text,6) * 100 / words_count)
+
 # Syllables Count algorithm
 # Based on Tyler Kendall's R Module, which is improved on
 # Greg Fast's Lingua::EN::Syllable Perl Module
