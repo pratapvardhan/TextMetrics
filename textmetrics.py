@@ -19,6 +19,10 @@ def unique_words_text(text):
 def unique_words_count_text(text):
     return len(unique_words_text(text))
 
+def word_count_distributions(text):
+    words_list = get_words_text(text)
+    return {x:words_list.count(x) for x in words_list}
+
 def get_sentences_text(text):
     return re.split(r'''[.!?]['"]?\s{1,2}(?=[A-Z])''',text)
 
