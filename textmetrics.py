@@ -5,7 +5,7 @@ def char_count_words(words):
     return sum(len(word.decode("utf-8")) for word in words)
 
 def char_count_text(text):
-    return len(re.sub(r'[^\w]','',text))
+    return len(re.sub(r'[^\w]', '', text))
 
 def get_words_text(text):
     return re.sub("[^\w]", " ",  text).split()
@@ -24,7 +24,7 @@ def word_count_distributions(text):
     return {x:words_list.count(x) for x in words_list}
 
 def get_sentences_text(text):
-    return re.split(r'''[.!?]['"]?\s{1,2}(?=[A-Z])''',text)
+    return re.split(r'''[.!?]['"]?\s{1,2}(?=[A-Z])''', text)
 
 def sentence_count_text(text):
     return len(get_sentences_text(text))
@@ -39,34 +39,39 @@ def unique_words_p_N(text,N):
     return N*lexical_diversity(text)
 
 def long_words_count_N(text,N):
-    return sum([1 for x in get_words_text(text) if len(x)>N])
+    return sum([1 for x in get_words_text(text) if len(x) > N])
 
 def syllables_count(text):
     return sum([syllable_count(x) for x in get_words_text(text)])
 
 def complex_words_count(text):
-    return sum([1 for x in get_words_text(text) if syllable_count(x)>=3])
+    return sum([1 for x in get_words_text(text) if syllable_count(x) >= 3])
 
 def flesch_reading_ease(text):
     """206.835 - 1.015 * (words / sentences) - 84.6 * (syllables / words)"""
-    return 206.835 - (1.015 * avg_words_sentence(text)) - (84.6 * syllables_count(text) / word_count_text(text))
+    return 206.835 - (1.015 * avg_words_sentence(text)) - \
+            (84.6 * syllables_count(text) / word_count_text(text))
 
 def flesch_kincaid_grade_level(text):
     """0.39 * (words / sentences) + 11.8 * (syllables / words) - 15.59"""
-    return (0.39 * avg_words_sentence(text)) + (11.8 * syllables_count(text) / word_count_text(text)) - 15.59
+    return (0.39 * avg_words_sentence(text)) + \
+            (11.8 * syllables_count(text) / word_count_text(text)) - 15.59
 
 def smog_index(text):
     """1.043 * ((complex_words * (30 / sentences) + 3.1291)**0.5)"""
-    return 1.043 * ((complex_words_count(text) * (30.0 / sentence_count_text(text)) + 3.1291)**0.5)
+    return 1.043 * ((complex_words_count(text) * \
+            (30.0 / sentence_count_text(text)) + 3.1291)**0.5)
 
 def gunning_fog_score(text):
     """0.4 * ((words / sentences) + 100 * (complex_words / words))"""
-    return 0.4 * (avg_words_sentence(text) + (100 * complex_words_count(text) / word_count_text(text)))
+    return 0.4 * (avg_words_sentence(text) + \
+        (100 * complex_words_count(text) / word_count_text(text)))
 
 def automated_readability_index(text):
     """4.71 * (characters / words) + 0.5 * (words / sentences) - 21.43"""
     words_count = word_count_text(text)
-    return 4.71 * (char_count_text(text) / words_count) + (0.5 * (words_count / sentence_count_text(text))) - 21.43
+    return 4.71 * (char_count_text(text) / words_count) + \
+             (0.5 * (words_count / sentence_count_text(text))) - 21.43
 
 def coleman_liau_index(text):
     """(0.0588 * charactersPer100Words) - (0.296 * sentencesPer100Words) - 15.8"""
@@ -78,7 +83,8 @@ def coleman_liau_index(text):
 def lix(text):
     """(words / sentences)+(longwords*100 / words)"""
     words_count = word_count_text(text)
-    return (words_count / sentence_count_text(text)) + (long_words_count_N(text,6) * 100 / words_count)
+    return (words_count / sentence_count_text(text)) + \
+            (long_words_count_N(text, 6) * 100 / words_count)
 
 # Syllables Count algorithm
 # Based on Tyler Kendall's R Module, which is improved on
@@ -152,7 +158,7 @@ def syllable_count(word):
     syl_count = 0
     word = word.lower()
     # Remove non-alpha characters
-    word = re.sub(r'[^\w]','', word)
+    word = re.sub(r'[^\w]', '', word)
     # Adjusting for common exceptions
     if word in syl_problem_words:
         return syl_problem_words[word]
@@ -164,7 +170,7 @@ def syllable_count(word):
         word = sps.sub('', word)
 
     # Remove non-word characters
-    word = re.sub(r'[^a-z]','', word)
+    word = re.sub(r'[^a-z]', '', word)
 
     # For syllables exceptions
     for s_syl in subsyl:
@@ -178,8 +184,8 @@ def syllable_count(word):
     if len(word) == 1:
         syl_count = 1
     else:
-        word_parts = re.split(r'[^aeiouy]+',word)
-        word_part_count = 0;
+        word_parts = re.split(r'[^aeiouy]+', word)
+        word_part_count = 0
         for word_part in word_parts:
             if word_part != '':
                 word_part_count += 1
