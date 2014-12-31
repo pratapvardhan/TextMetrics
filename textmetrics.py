@@ -8,7 +8,7 @@ def char_count_text(text):
     return len(re.sub(r'[^\w]', '', text))
 
 def get_words_text(text):
-    return re.sub("[^\w]", " ",  text).split()
+    return re.sub(r'[^\w]', ' ', text).split()
 
 def word_count_text(text):
     return len(get_words_text(text))
